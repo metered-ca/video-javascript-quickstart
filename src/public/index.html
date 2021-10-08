@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-white">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Demo App</title>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- Import the webpage's stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1/dist/tailwind.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@1.11.1/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="//cdn.metered.ca/sdk/video/1.1.6/sdk.min.js"></script>
+
+</head>
+
+<body>
+    
+
+<div class="navbar mb-2 shadow-lg bg-neutral text-neutral-content">
+  <div class="flex-none px-2 mx-2">
+    <span class="text-lg font-bold">
+        Metered
+    </span>
+  </div> 
+  <div class="flex-1 px-2 mx-2">
+    <div class="items-stretch hidden lg:flex">
+      <a href="https://docs.metered.ca/docs/getting-started" target="_blank" class="btn btn-ghost btn-sm rounded-btn">
+              Getting Started Guide
+            </a> 
+      <a href="https://docs.metered.ca/docs/tips-and-best-practices" target="_blank" class="btn btn-ghost btn-sm rounded-btn">
+        Tips and Best practices
+            </a> 
+      <a href="https://docs.metered.ca/docs/methods" target="_blank" class="btn btn-ghost btn-sm rounded-btn">
+              SDK Reference
+            </a>
+    </div>
+  </div> 
+</div>
+
+
+
+    <div id="meetingIdContainer" class="w-full bg-base-300 hidden font-bold text-center py-2">
+        Meeting ID: <span id="displayMeetingId"></span>
+    </div>
+    <!-- Join view -->
+    <div id="joinView" class="w-full items-center justify-center flex">
+        <div class="bg-base-300 w-11/12 max-w-screen-md	 rounded mt-48 p-10">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Meeting ID</span>
+                </label>
+                <div class="relative">
+                    <input id="meetingId" type="text" placeholder="Meeting ID"
+                        class="w-full pr-16 input input-primary input-bordered" />
+                    <button id="joinExistingMeeting" class="absolute top-0 right-0 rounded-l-none btn btn-primary text-xs">
+                        <span class="hidden sm:block">Join Existing Meeting</span>
+                        <span class="sm:hidden">Join</span>
+                    </button>
+                </div>
+            </div>
+            <div class="divider">OR</div>
+            <div class="flex justify-center">
+                <button id="createANewMeeting" class="btn btn-primary">Create a new meeting</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Waiting area -->
+    <div id="waitingArea" class="w-full items-center justify-center flex hidden">
+        <div class="bg-base-300 w-11/12 rounded mt-48 p-10">
+            <video id="waitingAreaVideoTag" class="w-full" muted autoplay playsinline></video>
+            
+
+            <div class="flex items-center justify-center mt-4 space-x-4">
+                <button id="waitingAreaMicrophoneButton" class="btn">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+                <button id="waitingAreaCameraButton" class="btn">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="divider"></div>
+            <div class="grid grid-cols-3 space-x-4">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Camera</span>
+                    </label>
+                    <select id="cameras" class="select select-bordered w-full"> </select>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Microphone</span>
+                    </label>
+                    <select id="microphones" class="select select-bordered w-full"> </select>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Speaker</span>
+                    </label>
+                    <select id="speakers" class="select select-bordered w-full"> </select>
+                </div>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">Enter a username</span>
+                </label>
+                <div class="relative">
+                    <input id="username" type="text" placeholder="username" class="w-full pr-16 input input-primary input-bordered" />
+                    <button id="joinMeetingButton" class="absolute top-0 right-0 rounded-l-none btn btn-primary">
+                        <span class="hidden sm:block">Join Existing Meeting</span>
+                        <span class="sm:hidden">Join</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Meeting view -->
+        <div id="meetingView" class="hidden ">
+            <!-- remote video containers -->
+            <div id="remoteParticipantContainer" style="display: flex;">
+        
+            </div>
+    
+            <!-- Active Speaker -->
+            <div class="mt-4">
+                <div style=" border-radius: 5px;" class="bg-base-300">
+                    <video id="activeSpeakerVideo" muted autoplay playsinline
+                        style="padding: 0; margin: 0; width: 100%; height: 400px;"></video>
+                    <div id="activeSpeakerUsername" class="bg-base-300	" style=" text-align: center;">
+                        
+                    </div>
+                </div>
+            </div>
+    
+            <div class="flex flex-col bg-base-300" style="width: 150px">
+                <video id="meetingAreaLocalVideo" muted autoplay playsinline
+                    style="padding: 0; margin: 0; width: 150px; height: 100px;"></video>
+                <div id="meetingAreaUsername" class="bg-base-300	" style=" text-align: center;">
+                   
+                </div>
+            </div>
+            <!-- Controls -->
+            <div style="display: flex; justify-content: center; margin-top: 20px;" class="space-x-4">
+                <button id="meetingViewMicrophone" class="btn">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z">
+                        </path>
+                    </svg>
+                </button>
+    
+                <button id="meetingViewCamera" class="btn">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                </button>
+    
+                <button id="meetingViewScreen" class="btn">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                        </path>
+                    </svg>
+                </button>
+                
+                <button id="meetingViewLeave" class="btn">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="leaveView" class="flex items-center justify-center hidden">
+            <div class="bg-base-300 w-11/12 rounded-lg mt-20 p-4">
+                <h1 class="text-2xl font-bold">You have Left the Meeting</h1>
+                <div class="divider"></div>
+                <p>
+                    <button class="btn btn-primary" onclick="window.location.reload()">Join Another Meeting</button>
+                </p>
+            </div>
+        </div>
+    <!-- Import the webpage's javascript file -->
+    <script src="/script.js" defer></script>
+</body>
+
+</html>
