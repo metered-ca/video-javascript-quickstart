@@ -46,15 +46,15 @@ npm install
   
   ## Testing on Multiple Devices
   
-  To test the application on multiple devices you can use ngrok, you can download and install it from here: https://ngrok.com/download
+  To test the application on multiple devices you can use [tsocket](https://tsocket.org), you can download and install it from here: https://tsocket.org
   
   After installing run the demo application then run the command
   
   ```
-  ngrok http 4000
+  tsocket http 4000
   ```
   
-  ngrok will give you a URL that you can open on multiple devices to test out video conferencing.
+  tsocket will give you a URL that you can open on multiple devices to test out video conferencing.
   
   ## Further Reading
   

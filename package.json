@@ -2,7 +2,8 @@
   "name": "metered-video-javascript-quickstart",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.js",
+  "bin": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
@@ -26,5 +27,10 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/metered-ca/video-javascript-quickstart.git"
+  },
+  "pkg": {
+    "scripts": "src/**/*.js",
+    "assets": "src/public/**/*",
+    "outputPath": "dist"
   }
 }
